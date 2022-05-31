@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:comixapp/components/comicCard.dart';
+import 'package:comixapp/telas/home.dart';
 import 'package:comixapp/widgets/BotNavItem.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TelaInicial extends StatefulWidget {
@@ -28,7 +30,6 @@ class _TelaInicialState extends State<TelaInicial> {
   }
   Widget buildImage(String urlImage, int index) => Container(
     margin: EdgeInsets.symmetric(horizontal: 2),
-    color: Colors.grey,
     width: double.infinity,
     child: Image.network(
       urlImage,
@@ -50,6 +51,16 @@ class _TelaInicialState extends State<TelaInicial> {
       appBar: AppBar(
         title: Text("Comix"),
         backgroundColor: Color(0xFF9a0a0a),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.logout,
+            ),
+            onPressed: (){
+              logout(context);
+            },
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,
@@ -63,8 +74,8 @@ class _TelaInicialState extends State<TelaInicial> {
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Wrap(
-            runSpacing: 10,
-            spacing: 5,
+            runSpacing: 6,
+            spacing: 2,
             children: [
               SizedBox(height: 4,),
               Container(
@@ -95,20 +106,10 @@ class _TelaInicialState extends State<TelaInicial> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.cyan,
-        unselectedItemColor: Colors.white,
-        onTap: navBarTap,
-        currentIndex: selectedNavIndex,
-        items: [
-          botNavItem(Icons.explore_outlined, "Discover"),
-          botNavItem(Icons.favorite, "Favorite"),
-          botNavItem(Icons.watch_later, "Recent"),
-          botNavItem(Icons.more_horiz, "More"),
-        ],
-      ),
     );
+  }
+  Future<void> logout(BuildContext context) async{
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeComix()));
   }
 }

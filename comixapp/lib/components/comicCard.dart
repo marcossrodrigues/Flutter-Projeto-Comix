@@ -8,16 +8,17 @@ class ComicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
-      width: 130,
+      margin: const EdgeInsets.only(top: 20, bottom: 0, left: 7),
+      height: 220,
+      width: 120,
       child: Column(
         children: [
-          Expanded(flex: 90,
+          Expanded(flex: 70,
           child: Container(
             child: Image.network(comicImg, fit: BoxFit.cover,),
           ),
           ),
-          Expanded(flex: 30,
+          Expanded(flex: 10,
             child: Container(
               alignment: Alignment.center,
               child: Text(comicTitle,
