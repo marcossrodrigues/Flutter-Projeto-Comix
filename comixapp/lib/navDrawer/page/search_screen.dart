@@ -74,6 +74,7 @@ class _TelaBuscaState extends State<TelaBusca> {
                         }
                         return ListView(
                           shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
                           children: snapshot.data!.docs
                               .map((DocumentSnapshot document) {
                             Map<String, dynamic> data =
