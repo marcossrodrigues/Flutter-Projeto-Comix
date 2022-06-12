@@ -1,8 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:comixapp/components/comicCard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comixapp/navDrawer/navigation_drawer.dart';
+import 'package:comixapp/navDrawer/page/details_screen.dart';
+import 'package:comixapp/navDrawer/page/search_screen.dart';
 import 'package:comixapp/telas/home.dart';
-import 'package:comixapp/widgets/BotNavItem.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TelaInicial extends StatefulWidget {
@@ -11,43 +14,53 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
-  int selectedNavIndex = 0;
-  bool mangaLoaded = false;
-  late List<Map<String, dynamic>> mangaList;
+  FirebaseFirestore firestoreRef = FirebaseFirestore.instance;
+  String collectionName = "comic";
+  // FirebaseStorage storageRef = FirebaseStorage.instance;
+
   final urlImages = [
-    'https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg',
-    'https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg',
-    'https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg',
-    'https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg',
-    'https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg',
-    'https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg',
+    'https://www.einerd.com.br/wp-content/uploads/2014/06/Marvel-Heroes.jpg.webp',
+    'https://pop.proddigital.com.br/wp-content/uploads/sites/8/2021/07/os-eternos-hq-31873877.jpg',
+    'https://kanto.legiaodosherois.com.br/w600-h600-k1/wp-content/uploads/2017/12/legiao_8YSA2JKwkGpctaRNnVzErxv1B96LXhiHQM5e34ZUbI.jpg.jpeg',
+    'https://d5y9g7a5.rocketcdn.me/wp-content/uploads/2020/01/historias-em-quadrinhos-conheca-sua-historia-e-repercussao-pelo-mundo-12-1024x685.jpg',
   ];
 
-  void navBarTap(int index) {
+  List _Comics = [];
+
+  fetchComics() async {
+    QuerySnapshot qn = await firestoreRef.collection(collectionName).get();
     setState(() {
-      selectedNavIndex = index;
+      for (int i = 0; i < qn.docs.length; i++) {
+        _Comics.add({
+          "capa": qn.docs[i]["capa"],
+          "name": qn.docs[i]["name"],
+          "discription": qn.docs[i]["discription"],
+          "genero": qn.docs[i]["genero"],
+          "pdf": qn.docs[i]["pdf"],
+        });
+      }
     });
+    return qn.docs;
   }
+
   Widget buildImage(String urlImage, int index) => Container(
-    margin: EdgeInsets.symmetric(horizontal: 2),
-    width: double.infinity,
-    child: Image.network(
-      urlImage,
-      fit: BoxFit.cover,
-    ),
-  );
-
-  void fetchManga() async {
-    // final webscraper = WebScraper(baseUrl);
-
-    //if (await webscraper.loadWebPaga('/read')) {
-    // mangaList = webscraper.getElement(address, attribs)
-  //}
-  }
+        margin: EdgeInsets.symmetric(horizontal: 2),
+        width: double.infinity,
+        child: Image.network(
+          urlImage,
+          fit: BoxFit.cover,
+        ),
+      );
 
   @override
+  void initState() {
+    fetchComics();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawerWidget(),
       appBar: AppBar(
         title: Text("Comix"),
         backgroundColor: Color(0xFF9a0a0a),
@@ -56,7 +69,7 @@ class _TelaInicialState extends State<TelaInicial> {
             icon: Icon(
               Icons.logout,
             ),
-            onPressed: (){
+            onPressed: () {
               logout(context);
             },
           ),
@@ -67,7 +80,7 @@ class _TelaInicialState extends State<TelaInicial> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("images/Background.png"),
+            image: AssetImage("images/Background.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -77,39 +90,86 @@ class _TelaInicialState extends State<TelaInicial> {
             runSpacing: 6,
             spacing: 2,
             children: [
-              SizedBox(height: 4,),
+              SizedBox(
+                height: 4,
+              ),
               Container(
                 child: CarouselSlider.builder(
                   options: CarouselOptions(
                     height: 260,
-                   // viewportFraction: 1,
+                    // viewportFraction: 1,
                     autoPlay: true,
                   ),
                   itemCount: urlImages.length,
-                  itemBuilder: (context, index, realIndex){
+                  itemBuilder: (context, index, realIndex) {
                     final urlImage = urlImages[index];
 
                     return buildImage(urlImage, index);
                   },
                 ),
               ),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
-              ComicCard(comicImg: "https://pbs.twimg.com/media/EcbML9JWAAEsTcK.jpg", comicTitle: "Comic 01"),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 7, right: 7),
+                  child: TextFormField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                          borderSide: BorderSide(color: Colors.blue)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                          borderSide: BorderSide(color: Colors.grey)),
+                      hintText: "Busque Quadrinhos Aqui",
+                      hintStyle: TextStyle(fontSize: 15),
+                    ),
+                    onTap: () => Navigator.push(context,
+                        CupertinoPageRoute(builder: (_) => TelaBusca())),
+                  ),
+                ),
+              ),
+              Expanded(
+                  child: SizedBox(
+                height: 330,
+                child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: _Comics.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, childAspectRatio: 0.9),
+                    itemBuilder: (_, index) {
+                      return GestureDetector(
+                        onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>TelaDetalhe(_Comics[index]))),
+                        child: Card(
+                          elevation: 3,
+                          child: Column(
+                            children: [
+                              AspectRatio(
+                                  aspectRatio: 0.99,
+                                  child: Image.network(_Comics[index]["capa"],
+                                      height: 250, width: 110, fit: BoxFit.fill)),
+                              Text(
+                                  "${_Comics[index]["name"].length > 15 ? _Comics[index]['name'].substring(0, 15) + '...' : _Comics[index]['name']}")
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              ))
             ],
           ),
         ),
       ),
     );
   }
-  Future<void> logout(BuildContext context) async{
+
+  Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeComix()));
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => HomeComix()));
   }
 }
+

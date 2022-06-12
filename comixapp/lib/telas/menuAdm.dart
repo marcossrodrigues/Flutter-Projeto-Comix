@@ -1,8 +1,6 @@
+import 'package:comixapp/cadastrar/cad_Comic.dart';
 import 'package:comixapp/telas/home.dart';
-import 'package:comixapp/telas/homeAdm.dart';
-import 'package:comixapp/telas/login_usuario.dart';
 import 'package:comixapp/telas/registration_adm.dart';
-import 'package:comixapp/telas/registration_usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -46,44 +44,9 @@ class _MenuAdmState extends State<MenuAdm> {
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: 400,
         onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CadComic()));
         },
-        child: Text("Cadastrar Quadrinhos", textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-
-    final editQuadriButton = Material(
-      elevation: 5,
-      borderRadius: BorderRadius.circular(30),
-      color: Color(0xFF9a0a0a),
-      child: MaterialButton(
-        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        minWidth: 400,
-        onPressed: () {
-        },
-        child: Text("Editar Quadrinhos", textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-
-    final excluiQuadriButton = Material(
-      elevation: 5,
-      borderRadius: BorderRadius.circular(30),
-      color: Color(0xFF9a0a0a),
-      child: MaterialButton(
-        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        minWidth: 400,
-        onPressed: () {
-        },
-        child: Text("Excluir Quadrinhos", textAlign: TextAlign.center,
+        child: Text("Quadrinhos", textAlign: TextAlign.center,
           style: TextStyle(fontSize: 12,
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -132,10 +95,6 @@ class _MenuAdmState extends State<MenuAdm> {
                     cadaAdmButton,
                     SizedBox(height: 15),
                     cadaQuadriButton,
-                    SizedBox(height: 15),
-                    editQuadriButton,
-                    SizedBox(height: 15),
-                    excluiQuadriButton,
                     SizedBox(height: 15),
                   ],
                 ),
