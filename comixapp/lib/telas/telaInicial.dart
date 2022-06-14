@@ -96,7 +96,7 @@ class _TelaInicialState extends State<TelaInicial> {
               Container(
                 child: CarouselSlider.builder(
                   options: CarouselOptions(
-                    height: 260,
+                    height: 195,
                     // viewportFraction: 1,
                     autoPlay: true,
                   ),
@@ -130,35 +130,40 @@ class _TelaInicialState extends State<TelaInicial> {
                   ),
                 ),
               ),
-              Expanded(
-                  child: SizedBox(
-                height: 330,
-                child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemCount: _Comics.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, childAspectRatio: 0.9),
-                    itemBuilder: (_, index) {
-                      return GestureDetector(
-                        onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>TelaDetalhe(_Comics[index]))),
-                        child: Card(
-                          elevation: 3,
-                          child: Column(
-                            children: [
-                              AspectRatio(
-                                  aspectRatio: 0.99,
-                                  child: Image.network(_Comics[index]["capa"],
-                                      height: 250, width: 110, fit: BoxFit.fill)),
-                              Text(
-                                  "${_Comics[index]["name"].length > 15 ? _Comics[index]['name'].substring(0, 15) + '...' : _Comics[index]['name']}")
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              ))
+              Row(
+                children: [
+                  Expanded(
+                    flex: 10,
+                      child: SizedBox(
+                    height: 340,
+                    child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: _Comics.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 0.9),
+                        itemBuilder: (_, index) {
+                          return GestureDetector(
+                            onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>TelaDetalhe(_Comics[index]))),
+                            child: Card(
+                              elevation: 3,
+                              child: Column(
+                                children: [
+                                  AspectRatio(
+                                      aspectRatio: 0.99,
+                                      child: Image.network(_Comics[index]["capa"],
+                                          height: 250, width: 110, fit: BoxFit.fill)),
+                                  Text(
+                                      "${_Comics[index]["name"].length > 15 ? _Comics[index]['name'].substring(0, 15) + '...' : _Comics[index]['name']}")
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                  )),
+                ],
+              )
             ],
           ),
         ),

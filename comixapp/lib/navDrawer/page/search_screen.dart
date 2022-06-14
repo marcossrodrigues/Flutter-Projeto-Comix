@@ -53,46 +53,51 @@ class _TelaBuscaState extends State<TelaBusca> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 7, right: 7),
-                child: Expanded(
-                    child: Container(
-                  child: StreamBuilder(
-                      stream:
-                          firestoreRef.collection(collectionName).where("name",isGreaterThanOrEqualTo: inputText).snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text("Algo deu errado"),
-                          );
-                        }
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 10,
+                        child: Container(
+                      child: StreamBuilder(
+                          stream:
+                              firestoreRef.collection(collectionName).where("name",isGreaterThanOrEqualTo: inputText).snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text("Algo deu errado"),
+                              );
+                            }
 
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: Text("Carregando"),
-                          );
-                        }
-                        return ListView(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          children: snapshot.data!.docs
-                              .map((DocumentSnapshot document) {
-                            Map<String, dynamic> data =
-                                document.data() as Map<String, dynamic>;
-                            return GestureDetector(
-                              onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>TelaDetalhe(data))),
-                              child: Card(
-                                elevation: 5,
-                                child: ListTile(
-                                  title: Text(data['name']),
-                                  leading: Image.network(data['capa'], height: 100, width: 70,fit: BoxFit.fill),
-                                ),
-                              ),
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: Text("Carregando"),
+                              );
+                            }
+                            return ListView(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              children: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                Map<String, dynamic> data =
+                                    document.data() as Map<String, dynamic>;
+                                return GestureDetector(
+                                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>TelaDetalhe(data))),
+                                  child: Card(
+                                    elevation: 5,
+                                    child: ListTile(
+                                      title: Text(data['name']),
+                                      leading: Image.network(data['capa'], height: 100, width: 70,fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             );
-                          }).toList(),
-                        );
-                      }),
-                )),
+                          }),
+                    )),
+                  ],
+                ),
               )
             ],
           ),
